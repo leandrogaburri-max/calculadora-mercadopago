@@ -70,7 +70,7 @@
             margin-bottom: 6px;
         }
 
-        input[type="number"], select {
+        input[type="text"], input[type="number"], select {
             width: 100%;
             padding: 14px;
             font-size: 1.2rem;
@@ -82,7 +82,7 @@
             transition: border-color 0.2s;
         }
 
-        input[type="number"]:focus, select:focus {
+        input[type="text"]:focus, input[type="number"]:focus, select:focus {
             border-color: var(--primary);
         }
 
@@ -236,7 +236,8 @@
     <div class="card">
         <div class="input-group">
             <label for="monto">Monto a financiar ($)</label>
-            <input type="number" id="monto" placeholder="0" inputmode="decimal" oninput="calcular()">
+            <!-- Tipo text e inputmode decimal para compatibilidad total con teclados iOS/Android -->
+            <input type="text" id="monto" placeholder="0" inputmode="decimal" oninput="normalizarYCalcular(this)">
         </div>
 
         <div class="tabs">
@@ -248,7 +249,7 @@
     </div>
 </div>
 
-<!-- Modal de Configuración -->
+<!-- Modal de Configuración Protegido -->
 <div class="modal" id="modalConfig">
     <div class="modal-content">
         <div class="modal-header">
@@ -290,7 +291,7 @@
 </div>
 
 <script>
-    // Contraseña de seguridad (cámbiala si lo deseas)
+    // Contraseña para acceder a la configuración
     const PASSWORD_ADMIN = "1234";
 
     let tasasData = [
@@ -302,6 +303,12 @@
     ];
 
     let modoActual = 'tarjetas';
+
+    // Función para manejar comas y puntos en teclados iOS / Android
+    function normalizarYCalcular(input) {
+        input.value = input.value.replace(',', '.');
+        calcular();
+    }
 
     function intentarAbrirConfig() {
         let pass = prompt("Ingrese la contraseña de administrador:");
@@ -363,7 +370,7 @@
             let val = parseFloat(document.getElementById(`val_${index}`).value);
             if (!isNaN(val)) {
                 if (tipoSelect === 'porcentaje') {
-                    item.valor = 1 + (val / 100); // Guardamos internamente como coeficiente
+                    item.valor = 1 + (val / 100);
                     item.tipo = 'porcentaje';
                 } else {
                     item.valor = val;
@@ -383,7 +390,7 @@
     }
 
     function calcular() {
-        const montoInput = document.getElementById('monto').value;
+        const montoInput = document.getElementById('monto').value.replace(',', '.');
         const monto = parseFloat(montoInput);
         const contenedor = document.getElementById('resultados');
 
