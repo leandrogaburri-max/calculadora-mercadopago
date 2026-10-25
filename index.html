@@ -154,6 +154,13 @@
             color: var(--text);
         }
 
+        /* Estilo para el total final debajo de cada cuota */
+        .total-final-detalle {
+            font-size: 0.82rem;
+            color: #555555;
+            margin-top: 4px;
+        }
+
         .sin-interes {
             background: #e1f5fe;
             color: #0288d1;
@@ -236,7 +243,6 @@
     <div class="card">
         <div class="input-group">
             <label for="monto">Monto a financiar ($)</label>
-            <!-- Tipo text e inputmode decimal para compatibilidad total con teclados iOS/Android -->
             <input type="text" id="monto" placeholder="0" inputmode="decimal" oninput="normalizarYCalcular(this)">
         </div>
 
@@ -291,7 +297,6 @@
 </div>
 
 <script>
-    // Contraseña para acceder a la configuración
     const PASSWORD_ADMIN = "1234";
 
     let tasasData = [
@@ -304,7 +309,6 @@
 
     let modoActual = 'tarjetas';
 
-    // Función para manejar comas y puntos en teclados iOS / Android
     function normalizarYCalcular(input) {
         input.value = input.value.replace(',', '.');
         calcular();
@@ -437,6 +441,9 @@
                     <div class="cuota-contenedor">
                         <div class="cuota-valor">
                             $${valorCuota.toLocaleString('es-AR', {minimumFractionDigits: 2, maximumFractionDigits: 2})}
+                        </div>
+                        <div class="total-final-detalle">
+                            Total: $${totalConInteres.toLocaleString('es-AR', {minimumFractionDigits: 2, maximumFractionDigits: 2})}
                         </div>
                     </div>
                 </div>
